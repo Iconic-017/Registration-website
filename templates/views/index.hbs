@@ -1,0 +1,260 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Form</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .form-container {
+    overflow-y: auto;
+    
+  }
+
+  .container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    overflow-y: auto; 
+    max-height: 80vh; 
+  }
+
+  .container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+  input[type="submit"] {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #45a049;
+  }
+
+  /* Hide college name input by default */
+  #college_name,
+  #second_member_details {
+    display: none;
+  }
+
+  #price {
+    font-weight: bold;
+  }
+
+  @media screen and (max-width: 600px) {
+    .container {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Registration Form</h2>
+  <form action="/register"  method="POST"    oninput="calculatePrice()">
+    <div class="form-group">
+      <label for="username">Name :</label>
+      <input type="text" id="nbame" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="username">Contact No. :</label>
+      <input type="text" id="username" name="contact" required>
+    </div>
+    <div class="form-group">
+      <label for="username">Team-Name :</label>
+      <input type="text" id="username" name="team" required>
+    </div>
+   
+    <div class="form-group">
+      <label for="team_members">Select Team Members:</label>
+      <select id="team_members" name="team_members" onchange="toggleTeamMemberDetails(this); calculatePrice()" required>
+        <option value="select">select</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+    <div class="form-group" id="college_group">
+      <label for="college">College:</label>
+      <select id="college" name="college" onchange="toggleCollegeNameInput(this); calculatePrice()" required>
+        <option value="select">select</option>
+        <option value="my_college">MRIIRS/MRU</option>
+        <option value="other_college">Other College</option>
+      </select>
+    </div>
+    <div class="form-group" id="college_name">
+      <label for="other_college_name">College Name:</label>
+      <input type="text" id="other_college_name" name="other_college_name">
+    </div>
+    <div class="form-group">
+        <label for="second_member_name">University Roll no.:</label>
+        <input type="text" id="roll" name="roll">
+      </div>
+    <div class="form-group" id="second_member_details">
+      <h3>Second Team Member Details</h3>
+      <div class="form-group">
+        <label for="second_member_name">Name:</label>
+        <input type="text" id="second_member_name" name="second_member_name">
+      </div>
+      <div class="form-group">  
+        <label for="second_member_email">Email:</label>
+        <input type="email" id="second_member_email" name="second_member_email" required>
+      </div>
+      <div class="form-group">
+        <label for="second_member_contact">Contact:</label>
+        <input type="text" id="second_member_contact" name="second_member_contact">
+      </div>
+      <div class="form-group">
+        <label for="second_member_name">University Roll no.:</label>
+        <input type="text" id="second_member_roll" name="second_member_roll">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="price">Price:</label>
+      <span id="price">$0</span>
+    </div>
+    <div class="form-group" id="qr_code">
+      <label for="qr_image">QR Code:</label>
+      <img id="qr_image" src="" alt="QR Code">
+    </div>
+    <input type="submit" value="Register">
+  </form>
+</div>
+
+<script>
+function toggleCollegeNameInput(select) {
+  var collegeNameInput = document.getElementById("college_name");
+  if (select.value === "other_college") {
+    collegeNameInput.style.display = "block";
+  } else {
+    collegeNameInput.style.display = "none";
+  }
+}
+
+function toggleTeamMemberDetails(select) {
+  var secondMemberDetails = document.getElementById("second_member_details");
+  var secondMemberName = document.getElementById("second_member_name");
+  var secondMemberEmail = document.getElementById("second_member_email");
+  var secondMemberContact = document.getElementById("second_member_contact");
+
+  if (select.value === "2") {
+    secondMemberDetails.style.display = "block";
+    // Add required attribute to the input fields
+    secondMemberName.setAttribute("required", true);
+    secondMemberEmail.setAttribute("required", true);
+    secondMemberContact.setAttribute("required", true);
+  } else {
+    secondMemberDetails.style.display = "none";
+    // Remove required attribute from the input fields
+    secondMemberName.removeAttribute("required");
+    secondMemberEmail.removeAttribute("required");
+    secondMemberContact.removeAttribute("required");
+  }
+}
+
+
+function calculatePrice() {
+  var college = document.getElementById("college").value;
+  var teamMembers = parseInt(document.getElementById("team_members").value);
+  var price = 0;
+
+  if (college === "my_college") {
+    price = (teamMembers === 1) ? 200 : 300;
+  } else if (college === "other_college") {
+    price = (teamMembers === 1) ? 350 : 500;
+  }
+
+  var qrImage = document.getElementById("qr_image");
+  switch(price) {
+    case 200:
+      qrImage.src = "qr_200.png";
+      break;
+    case 300:
+      qrImage.src = "qr_300.png";
+      break;
+    case 350:
+      qrImage.src = "qr_350.png";
+      break;
+    case 500:
+      qrImage.src = "qr_500.png";
+      break;
+    default:
+      qrImage.src = "";
+      break;
+  }
+
+  document.getElementById("price").textContent = "$" + price;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
